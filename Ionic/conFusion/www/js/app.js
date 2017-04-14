@@ -65,7 +65,7 @@ angular.module('conFusion', ['ionic', 'conFusion.controllers','conFusion.service
       views: {
         'mainContent': {
           templateUrl: 'templates/menu.html',
-          controller: ''
+          controller: 'MenuController'
         }
       }
     })
