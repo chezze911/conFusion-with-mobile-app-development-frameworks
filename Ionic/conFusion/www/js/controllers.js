@@ -153,8 +153,21 @@ angular.module('conFusion.controllers', [])
             };
         }])
 
-        .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', 'baseURL', function($scope, $stateParams, menuFactory, baseURL) {
+        .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', 'favoriteFactory', 'baseURL', '$ionicPopover', '$ionicModal', function($scope, $stateParams, menuFactory, favoriteFactory, baseURL, $ionicPopover, $ionicModal) {
             
+            $ionicPopover.fromTemplateUrl('templates/dish-detail-popover.html', {
+                scope: $scope
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
+
+            $scope.openPopover = function($event) {
+                $scope.popover.show($event)
+            };
+            $scope.closePopover = function() {
+                $scope.popover.hide();
+            };
+
             $scope.baseURL = baseURL;
             $scope.dish = {};
             $scope.showDish = false;
@@ -170,6 +183,39 @@ angular.module('conFusion.controllers', [])
                                 $scope.message = "Error: "+response.status + " " + response.statusText;
                             }
             );
+
+            $scope.addFavorite = function() {
+                console.log("index is " + $scope.dish.id);
+                favoriteFactory.addToFavorites($scope.dish.id)
+                $scope.closePopover();
+            }
+
+            $scope.comment = {};
+
+            $ionicModal.fromTemplateUrl('templates/dish-comment.html', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.commentform = modal;
+            });
+
+            $scope.closeComment = function() {
+                $scope.commentform.hide();
+            };
+
+            $scope.openComment = function() {
+                $scope.commentform.show();
+            };
+
+            $scope.doComment = function() {
+                $scope.comment.date = new Date().toISOString();
+                console.log($scope.comment);
+                $scope.dish.comments.push($scope.comment);
+
+                menuFactory.getDishes().update({id: $scope.dish.id}, $scope.dish);
+                $scope.comment = {rating: 5};
+                $scope.closePopover();
+                $scope.closeComment();
+            }
 
             
         }])
@@ -192,26 +238,7 @@ angular.module('conFusion.controllers', [])
             }
         }])
 
-        // implement the IndexController and About Controller here
-
-        // .controller('IndexController', ['$scope', 'menuFactory', 'corporateFactory', function($scope, menuFactory, corporateFactory) {
-                                        
-        //                 $scope.leader = corporateFactory.get({id:3});
-        //                 $scope.showDish = false;
-        //                 $scope.message="Loading ...";
-        //                 $scope.dish = menuFactory.getDishes().get({id:0})
-        //                 .$promise.then(
-        //                     function(response){
-        //                         $scope.dish = response;
-        //                         $scope.showDish = true;
-        //                     },
-        //                     function(response) {
-        //                         $scope.message = "Error: "+response.status + " " + response.statusText;
-        //                     }
-        //                 );
-        //                 $scope.promotion = menuFactory.getPromotion().get({id:0});
-            
-        //             }])
+        
         .controller('IndexController', ['$scope', 'menuFactory', 'corporateFactory', 'baseURL', function($scope, menuFactory, corporateFactory, baseURL) {
 
                         $scope.baseURL = baseURL;
