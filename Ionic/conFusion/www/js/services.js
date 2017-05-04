@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('conFusion.services', ['ngResource'])
-        .constant("baseURL","http://10.21.82.170:3000/")
+        .constant("baseURL","http://localhost:3000/")
         .factory('menuFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
+            
             return $resource(baseURL + "dishes/:id", null, {
                 'update': {
                     method: 'PUT'
@@ -13,22 +14,36 @@ angular.module('conFusion.services', ['ngResource'])
         }])
 
         .factory('promotionFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
-                    return $resource(baseURL + "promotions/:id");
+            
+            
+            return $resource(baseURL + "promotions/:id", null, {
+                'update': {
+                    method: 'PUT'
+                }
+            });
     
                         
         }])
 
         .factory('corporateFactory', ['$resource', 'baseURL', function($resource,baseURL) {
-    
-    
-            return $resource(baseURL+"leadership/:id");
+
+            
+            return $resource(baseURL+"leadership/:id", null, {
+                'update': {
+                    method: 'PUT'
+                }
+            });
     
         }])
 
         .factory('feedbackFactory', ['$resource', 'baseURL', function($resource,baseURL) {
     
-    
-            return $resource(baseURL+"feedback/:id");
+
+            return $resource(baseURL+"feedback/:id", null, {
+                'update': {
+                    method: 'PUT'
+                }
+            });
     
         }])
 
@@ -77,5 +92,6 @@ angular.module('conFusion.services', ['ngResource'])
             }
           }
         }])
+
 
 ;
