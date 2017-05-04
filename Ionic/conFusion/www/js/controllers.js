@@ -240,16 +240,26 @@ angular.module('conFusion.controllers', [])
             
                     }])
 
-        .controller('FavoritesController', ['$scope', 'dishes', 'favorites', 'favoriteFactory', 'baseURL', '$ionicListDelegate', '$ionicPopup', '$ionicLoading', '$timeout', function ($scope, dishes, favorites, favoriteFactory, baseURL, $ionicListDelegate, $ionicPopup, $ionicLoading, $timeout) {
+        .controller('FavoritesController', [ '$rootScope', '$scope', 'dishes', 'favorites', 'favoriteFactory', 
+            'baseURL', '$ionicListDelegate', '$ionicPopup', '$ionicLoading', '$timeout', '$localStorage', 
+            function ($rootScope, $scope, dishes, favorites, favoriteFactory, baseURL, $ionicListDelegate, $ionicPopup, $ionicLoading, $timeout, $localStorage) {
+
+                    $scope.$on('$ionicView.enter', function(e) {
+                        $scope.favorites = $localStorage.getObject('favorites', '[]');
+                    });
 
                     $scope.baseURL = baseURL;
                     $scope.shouldShowDelete = false;
 
-                    $scope.favorites = favorites;
 
                     $scope.dishes = dishes;
 
-                    console.log($scope.dishes, $scope.favorites);
+
+                    $scope.favorites = $localStorage.getObject('favorites', '[]');
+
+        
+
+
 
                     $scope.toggleDelete = function () {
                         $scope.shouldShowDelete = !$scope.shouldShowDelete;
